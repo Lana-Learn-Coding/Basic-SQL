@@ -10,14 +10,6 @@ CREATE TABLE Catelog
     description NVARCHAR(256),
 )
 
-CREATE TABLE Product
-(
-    id        INT PRIMARY KEY IDENTITY (1, 1),
-    name      NVARCHAR(128) NOT NULL UNIQUE,
-    catelogId INT,
-    FOREIGN KEY (catelogId) REFERENCES Catelog (id) ON UPDATE CASCADE ON DELETE SET NULL
-)
-
 CREATE TABLE Customer
 (
     id     INT PRIMARY KEY IDENTITY (1, 1),
@@ -29,13 +21,21 @@ CREATE TABLE Customer
     image  NVARCHAR(128)
 )
 
+CREATE TABLE Product
+(
+    id        INT PRIMARY KEY IDENTITY (1, 1),
+    name      NVARCHAR(128) NOT NULL UNIQUE,
+    catelogId INT,
+    FOREIGN KEY (catelogId) REFERENCES Catelog (id) ON UPDATE CASCADE ON DELETE SET NULL
+)
+
 CREATE TABLE Bill
 (
     customerId  INT NOT NULL,
-    productId   INT NOT NULL UNIQUE,
+    productId   INT NOT NULL,
     quantity    INT NOT NULL,
     description NVARCHAR(256),
     PRIMARY KEY (customerId, productId),
-    FOREIGN KEY (customerId) REFERENCES Customer (id) ON UPDATE CASCADE,
-    FOREIGN KEY (productId) REFERENCES Product (id) ON UPDATE CASCADE
+    FOREIGN KEY (customerId) REFERENCES Customer (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (productId) REFERENCES Product (id) ON UPDATE CASCADE ON DELETE CASCADE
 )
