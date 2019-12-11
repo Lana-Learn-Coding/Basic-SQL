@@ -1,0 +1,26 @@
+SELECT *
+FROM DMSV
+
+SELECT MaSV     AS 'Ma Sinh Vien',
+       TenSV    AS 'Ten Sinh Vien',
+       GioiTinh AS 'Gioi Tinh'
+FROM DMSV
+
+SELECT TOP 2 *
+FROM DMSV
+WHERE MaKH = 'TH'
+
+SELECT TOP 50 PERCENT *
+FROM DMSV
+
+UPDATE DMSV
+SET DiemTB = 7
+WHERE MaSV = 'C01'
+
+UPDATE DMSV
+SET DiemTB = 6
+WHERE MaSV = 'C02'
+
+DELETE
+FROM DMSV
+WHERE MaSV = 'C03'
