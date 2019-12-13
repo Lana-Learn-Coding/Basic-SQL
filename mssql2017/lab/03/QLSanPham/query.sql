@@ -1,46 +1,38 @@
--- TODO: Do something with these sub-query
-
 SELECT SUM(SoLuong * DonGia) AS TongSo,
        SUM(SoLuong)          AS TongSanPham
 FROM CustomerItems
-         INNER JOIN Items ON CustomerItems.MaHang = Items.MaHang
+         LEFT JOIN Items ON CustomerItems.MaHang = Items.MaHang
 
-SELECT Items.MaHang,
-       TenHang,
-       DonGia,
-       (SELECT SUM(SoLuong)
-        FROM CustomerItems
-        WHERE CustomerItems.MaHang = Items.MaHang
-       ) AS DaBan
+
+SELECT Items.MaHang, TenHang, DonGia, ISNULL(SUM(SoLuong), 0) AS DaBan
 FROM Items
+         LEFT JOIN CustomerItems ON CustomerItems.MaHang = Items.MaHang
+GROUP BY Items.MaHang, TenHang, DonGia
 ORDER BY DaBan DESC
 
-SELECT TOP 3 Items.MaHang,
-             TenHang,
-             DonGia
+
+SELECT TOP 3 Items.mahang, tenhang, dongia
 FROM Items
-ORDER BY (SELECT SUM(SoLuong)
-          FROM CustomerItems
-          WHERE CustomerItems.MaHang = Items.MaHang
-         ) DESC
+         LEFT JOIN CustomerItems ON Items.MaHang = CustomerItems.MaHang
+GROUP BY Items.mahang, tenhang, dongia
+ORDER BY SUM(SoLuong) DESC
 
-SELECT *
+
+SELECT Items.mahang, tenhang, dongia, ISNULL(CustomerItems.SoLuong, 0) AS SoLuong
 FROM Items
-WHERE (SELECT COUNT(*)
-       FROM CustomerItems
-       WHERE CustomerItems.MaHang = Items.MaHang
-      ) = 0
+         LEFT JOIN CustomerItems ON Items.MaHang = CustomerItems.MaHang
+WHERE CustomerItems.SoLuong IS NULL
 
-SELECT *
-FROM Customers
-WHERE (SELECT COUNT(DISTINCT MaHang)
-       FROM CustomerItems
-       WHERE CustomerItems.MaKhach = Customers.MaKhach
-      ) > 1
 
-SELECT *
+SELECT Customers.MaKhach, TenKhach, DienThoai, COUNT(DISTINCT MaHang) AS SoLoaiDaMua
 FROM Customers
-WHERE (SELECT MAX(SoLuong)
-       FROM CustomerItems
-       WHERE CustomerItems.MaKhach = Customers.MaKhach
-      ) > 1
+         LEFT JOIN CustomerItems ON Customers.MaKhach = CustomerItems.MaKhach
+GROUP BY Customers.MaKhach, TenKhach, DienThoai
+HAVING COUNT(DISTINCT MaHang) > 1
+
+
+SELECT Customers.MaKhach, TenKhach, DienThoai, MAX(SoLuong) AS SoLuongMua
+FROM Customers
+         LEFT JOIN CustomerItems ON Customers.MaKhach = CustomerItems.MaKhach
+GROUP BY Customers.MaKhach, TenKhach, DienThoai
+HAVING MAX(SoLuong) > 1
