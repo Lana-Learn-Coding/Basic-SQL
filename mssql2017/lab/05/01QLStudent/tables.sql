@@ -1,0 +1,30 @@
+DROP TABLE IF EXISTS StudentSubject
+DROP TABLE IF EXISTS Subject
+DROP TABLE IF EXISTS Student
+
+CREATE TABLE Student
+(
+    RN     INT IDENTITY PRIMARY KEY,
+    Name   NVARCHAR(50) NOT NULL,
+    Age    INT,
+    Gender CHAR,
+    CHECK (Age > 0)
+)
+
+CREATE TABLE Subject
+(
+    SID   INT IDENTITY PRIMARY KEY,
+    SName NVARCHAR(50) NOT NULL
+)
+
+CREATE TABLE StudentSubject
+(
+    SID  INT,
+    RN   INT,
+    Mark FLOAT NOT NULL,
+    Date DATE,
+    PRIMARY KEY (SID, RN),
+    FOREIGN KEY (SID) REFERENCES Subject (SID),
+    FOREIGN KEY (RN) REFERENCES Student (RN),
+    CHECK (MARK >= 0 AND MARK <= 10)
+)
