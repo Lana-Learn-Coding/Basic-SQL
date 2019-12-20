@@ -1,8 +1,8 @@
 DROP TABLE IF EXISTS Dinh_Muc
 DROP TABLE IF EXISTS KHSX
 DROP TABLE IF EXISTS Hang_Hoa
+DROP TABLE IF EXISTS Hang_Hoa_Backup
 DROP TABLE IF EXISTS NVL
-
 
 CREATE TABLE Hang_Hoa
 (
@@ -37,6 +37,9 @@ CREATE TABLE KHSX
     FOREIGN KEY (MaHH) REFERENCES Hang_Hoa (MaHH)
 )
 
+ALTER TABLE Hang_Hoa
+    ADD GhiChu VARCHAR(50)
+
 --Insert data
 INSERT INTO Hang_Hoa(MaHH, TenHH)
 VALUES ('G001', N'Giày thể thao'),
@@ -68,3 +71,8 @@ VALUES (200504, 'G001', 8000),
        (200504, 'G003', 7000),
        (200505, 'G001', 7500),
        (200505, 'G002', 8000)
+
+-- Backup
+SELECT *
+INTO Hang_Hoa_Backup
+FROM Hang_Hoa
