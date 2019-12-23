@@ -1,0 +1,23 @@
+ALTER TABLE Students
+    ADD CHECK (Age > 15 AND Age < 50),
+        Status BIT DEFAULT 1
+
+-- Delete all foreign key
+WHILE (EXISTS(SELECT 1
+              FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS
+              WHERE CONSTRAINT_TYPE = 'FOREIGN KEY'))
+    BEGIN
+        DECLARE @sql NVARCHAR(MAX)
+        SELECT TOP 1 @sql = ('ALTER TABLE ' + TABLE_NAME + ' DROP CONSTRAINT ' + CONSTRAINT_NAME)
+        FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS
+        WHERE CONSTRAINT_TYPE = 'FOREIGN KEY'
+
+        EXEC (@sql)
+    END
+
+DELETE Students
+WHERE StudentID = 1;
+
+UPDATE Students
+SET Status =1
+WHERE Status IS NULL
